@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package protos;
+
+service CalculatorService { rpc Add(Operands) returns (Result); }
+
+message Operands {
+  float first_operand = 1;
+  float second_operand = 2;
+}
+
+message Result {
+  float result = 1;
+  string message = 2;
+}
