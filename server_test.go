@@ -32,8 +32,8 @@ func TestAdd(t *testing.T) {
 			req := tc.req
 			resp, _ := s.Add(context.Background(), req)
 
-			if resp.Result != tc.resp {
-				t.Errorf("Expected response Result to be %v but got %v", tc.resp, resp.Result)
+			if resp.GetResult() != tc.resp {
+				t.Errorf("Expected response Result to be %v but got %v", tc.resp, resp.GetResult())
 			}
 		})
 	}
@@ -67,7 +67,7 @@ func TestDivide(t *testing.T) {
 
 			if tc.message != "" {
 				if resp.GetResult() != tc.resp {
-					t.Errorf("Expected response Result to be %v but got %v", tc.resp, resp.Result)
+					t.Errorf("Expected response Result to be %v but got %v", tc.resp, resp.GetResult())
 				}
 			} else {
 				if resp.GetMessage() != tc.message {
