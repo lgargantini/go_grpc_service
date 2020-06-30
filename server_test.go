@@ -37,5 +37,8 @@ func TestAdd(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestDivide(t *testing.T) {
 
 }
