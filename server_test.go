@@ -40,5 +40,29 @@ func TestAdd(t *testing.T) {
 }
 
 func TestDivide(t *testing.T) {
+	testCases := []struct {
+		name string
+		req  *pb.Operands
+		resp float32
+	}{
+		{
+			name: "Divide two integers",
+			req:  &pb.Operands{FirstOperand: 10, SecondOperand: 5},
+			resp: 2,
+		},
+	}
+
+	s := server{}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			req := tc.req
+			resp, _ := s.Divide(context.Background(), req)
+
+			if resp.Result != tc.resp {
+				t.Errorf("Expected response Result to be %v but got %v", tc.resp, resp.Result)
+			}
+		})
+	}
 
 }
