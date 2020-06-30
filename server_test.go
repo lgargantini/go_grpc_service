@@ -41,14 +41,20 @@ func TestAdd(t *testing.T) {
 
 func TestDivide(t *testing.T) {
 	testCases := []struct {
-		name string
-		req  *pb.Operands
-		resp float32
+		name      string
+		req       *pb.Operands
+		resp      float32
+		expectErr bool
 	}{
 		{
 			name: "Divide two integers",
 			req:  &pb.Operands{FirstOperand: 10, SecondOperand: 5},
 			resp: 2,
+		},
+		{
+			name:      "Divide by zero",
+			req:       &pb.Operands{FirstOperand: 10, SecondOperand: 0},
+			expectErr: true,
 		},
 	}
 
@@ -57,10 +63,15 @@ func TestDivide(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			req := tc.req
-			resp, _ := s.Divide(context.Background(), req)
-
-			if resp.Result != tc.resp {
-				t.Errorf("Expected response Result to be %v but got %v", tc.resp, resp.Result)
+			resp, err := s.Divide(context.Background(), req)
+			if !tc.expectErr {
+				if resp.Result != tc.resp {
+					t.Errorf("Expected response Result to be %v but got %v", tc.resp, resp.Result)
+				}
+			} else {
+				if err == nil {
+					t.Errorf("Expected error %v but got nil", err)
+				}
 			}
 		})
 	}
