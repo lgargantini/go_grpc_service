@@ -128,7 +128,7 @@ func init() {
 }
 
 var fileDescriptor_a0b84a42fa06f626 = []byte{
-	// 181 bytes of a gzipped FileDescriptorProto
+	// 192 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2d, 0x4e, 0x2d, 0x2a,
 	0xcb, 0x4c, 0x4e, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x03, 0x53, 0xc5, 0x4a, 0x61,
 	0x5c, 0x1c, 0xfe, 0x05, 0xa9, 0x45, 0x89, 0x79, 0x29, 0xc5, 0x42, 0xca, 0x5c, 0xbc, 0x69, 0x99,
@@ -136,11 +136,11 @@ var fileDescriptor_a0b84a42fa06f626 = []byte{
 	0x20, 0x54, 0x95, 0x90, 0x2a, 0x17, 0x5f, 0x71, 0x6a, 0x72, 0x7e, 0x5e, 0x0a, 0x5c, 0x15, 0x13,
 	0x58, 0x15, 0x2f, 0x44, 0x14, 0xaa, 0x4c, 0xc9, 0x8a, 0x8b, 0x2d, 0x28, 0xb5, 0xb8, 0x34, 0xa7,
 	0x44, 0x48, 0x8c, 0x8b, 0xad, 0x08, 0xcc, 0x82, 0x1a, 0x07, 0xe5, 0x09, 0x49, 0x70, 0xb1, 0xe7,
-	0xa6, 0x16, 0x17, 0x27, 0xa6, 0xa7, 0x82, 0x4d, 0xe0, 0x0c, 0x82, 0x71, 0x8d, 0x6c, 0xb8, 0x04,
+	0xa6, 0x16, 0x17, 0x27, 0xa6, 0xa7, 0x82, 0x4d, 0xe0, 0x0c, 0x82, 0x71, 0x8d, 0x32, 0xb8, 0x04,
 	0x9d, 0x13, 0x73, 0x92, 0x4b, 0x73, 0x12, 0x4b, 0xf2, 0x8b, 0x82, 0x21, 0xce, 0x16, 0x52, 0xe7,
 	0x62, 0x76, 0x4c, 0x49, 0x11, 0x12, 0x80, 0xb8, 0xbf, 0x58, 0x0f, 0xe6, 0x6a, 0x29, 0x3e, 0x98,
-	0x08, 0xc4, 0xbe, 0x24, 0x88, 0xcf, 0x8c, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0x2f, 0xc8, 0x61,
-	0xab, 0xf1, 0x00, 0x00, 0x00,
+	0x08, 0xd4, 0x3e, 0x2d, 0x2e, 0x36, 0x97, 0xcc, 0xb2, 0xcc, 0x94, 0x54, 0xc2, 0x6a, 0x93, 0x20,
+	0xa1, 0x60, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0xb0, 0x97, 0xa6, 0xe2, 0x1d, 0x01, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -156,6 +156,7 @@ const _ = grpc.SupportPackageIsVersion6
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type CalculatorServiceClient interface {
 	Add(ctx context.Context, in *Operands, opts ...grpc.CallOption) (*Result, error)
+	Divide(ctx context.Context, in *Operands, opts ...grpc.CallOption) (*Result, error)
 }
 
 type calculatorServiceClient struct {
@@ -175,9 +176,19 @@ func (c *calculatorServiceClient) Add(ctx context.Context, in *Operands, opts ..
 	return out, nil
 }
 
+func (c *calculatorServiceClient) Divide(ctx context.Context, in *Operands, opts ...grpc.CallOption) (*Result, error) {
+	out := new(Result)
+	err := c.cc.Invoke(ctx, "/protos.CalculatorService/Divide", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CalculatorServiceServer is the server API for CalculatorService service.
 type CalculatorServiceServer interface {
 	Add(context.Context, *Operands) (*Result, error)
+	Divide(context.Context, *Operands) (*Result, error)
 }
 
 // UnimplementedCalculatorServiceServer can be embedded to have forward compatible implementations.
@@ -186,6 +197,9 @@ type UnimplementedCalculatorServiceServer struct {
 
 func (*UnimplementedCalculatorServiceServer) Add(ctx context.Context, req *Operands) (*Result, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Add not implemented")
+}
+func (*UnimplementedCalculatorServiceServer) Divide(ctx context.Context, req *Operands) (*Result, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Divide not implemented")
 }
 
 func RegisterCalculatorServiceServer(s *grpc.Server, srv CalculatorServiceServer) {
@@ -210,6 +224,24 @@ func _CalculatorService_Add_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CalculatorService_Divide_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Operands)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CalculatorServiceServer).Divide(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/protos.CalculatorService/Divide",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CalculatorServiceServer).Divide(ctx, req.(*Operands))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _CalculatorService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "protos.CalculatorService",
 	HandlerType: (*CalculatorServiceServer)(nil),
@@ -217,6 +249,10 @@ var _CalculatorService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Add",
 			Handler:    _CalculatorService_Add_Handler,
+		},
+		{
+			MethodName: "Divide",
+			Handler:    _CalculatorService_Divide_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

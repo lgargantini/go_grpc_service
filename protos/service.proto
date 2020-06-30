@@ -2,7 +2,10 @@ syntax = "proto3";
 
 package protos;
 
-service CalculatorService { rpc Add(Operands) returns (Result); }
+service CalculatorService {
+  rpc Add(Operands) returns (Result);
+  rpc Divide(Operands) returns (Result);
+}
 
 message Operands {
   float first_operand = 1;
