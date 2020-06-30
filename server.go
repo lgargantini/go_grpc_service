@@ -10,5 +10,8 @@ type server struct {
 }
 
 func (s *server) Add(ctx context.Context, in *pb.Operands) (*pb.Result, error) {
-	return &pb.Result{Result: 3}, nil
+
+	result := in.GetFirstOperand() + in.GetSecondOperand()
+
+	return &pb.Result{Result: result}, nil
 }
