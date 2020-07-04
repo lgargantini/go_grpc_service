@@ -2,9 +2,10 @@ package main
 
 import (
 	"context"
-	pb "grpc_service/service/protos"
 	"log"
 	"net"
+
+	pb "grpc.go/service/protos"
 
 	"google.golang.org/grpc"
 )
@@ -33,7 +34,7 @@ func (s *server) Divide(ctx context.Context, in *pb.Operands) (*pb.Result, error
 func main() {
 	listen, err := net.Listen("tcp", ":12000")
 	if err != nil {
-		log.Fatal("failed to listen: %v", err)
+		log.Fatalf("failed to listen: %v", err)
 	}
 	svr := grpc.NewServer()
 	pb.RegisterCalculatorServiceServer(svr, &server{})

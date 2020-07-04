@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	pb "grpc_service/protos"
 	"testing"
+
+	pb "grpc.go/service/protos"
 )
 
 func TestAdd(t *testing.T) {
