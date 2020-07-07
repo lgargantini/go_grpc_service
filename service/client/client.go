@@ -51,6 +51,10 @@ func main() {
 	switch *action {
 	case "add":
 		response, err = client.Add(ctx, &pb.Operands{FirstOperand: (*operands)[0], SecondOperand: (*operands)[1]})
+	case "division":
+		response, err = client.Divide(ctx, &pb.Operands{FirstOperand: (*operands)[0], SecondOperand: (*operands)[1]})
+	default:
+		log.Fatalf("don't know operation %v\n", *action)
 	}
 
 	if err != nil {
